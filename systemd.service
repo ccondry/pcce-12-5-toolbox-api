@@ -1,0 +1,16 @@
+[Unit]
+Description=dCloud PCCE Demo Toolbox REST API
+After=network.target
+
+[Service]
+WorkingDirectory=/opt/dcloud/pcce-12-5-toolbox-api
+ExecStart=/usr/bin/node --max-http-header-size=16384 src/index.js
+Restart=always
+User=root
+Group=root
+Environment=PATH=/usr/bin:/usr/local/bin
+Environment=NODE_ENV=production
+Environment=NODE_EXTRA_CA_CERTS=extra-CAs.pem
+
+[Install]
+WantedBy=multi-user.target
