@@ -42,7 +42,16 @@ router.post('/', async (req, res, next) => {
       await db.insertOne('toolbox', 'cumulus.config', body)
       console.log('Successfully created Cumulus configuration for user', userId)
     }
-    // get vertical
+    // success
+    res.status(202).send()
+  } catch (e) {
+    // failed
+    console.error('failed to update Cumulus demo configuration for user', userId, ':', e.message)
+    return res.status(500).send(e.message)
+  }
+
+  try {
+    // get full vertical details
     const verticalConfig = await vertical.get(req.body.vertical)
     
     // get GCP key for this project ID from cumulus-api
@@ -55,16 +64,18 @@ router.post('/', async (req, res, next) => {
       key
     }
 
-    // create or update asr, tts, nlp service accounts
-    await createServiceAccount('asr', serviceAccount)
-    await createServiceAccount('tts', serviceAccount)
-    await createServiceAccount('nlp', serviceAccount)
-    // success
-    return res.status(202).send()
+    // sync asr, tts, nlp service accounts
+    createServiceAccount('asr', serviceAccount).then(e => {
+      console.log('failed to sync VVB CVA ASR account:', e.message)
+    })
+    createServiceAccount('tts', serviceAccount).then(e => {
+      console.log('failed to sync VVB CVA TTS account:', e.message)
+    })
+    createServiceAccount('nlp', serviceAccount).then(e => {
+      console.log('failed to sync VVB CVA NLP account:', e.message)
+    })
   } catch (e) {
-    // failed
-    console.error('failed to update Cumulus demo configuration for user', userId, ':', e.message)
-    return res.status(500).send(e.message)
+    console.log('failed to sync VVB CVA service accounts:', e.message)
   }
 })
 
