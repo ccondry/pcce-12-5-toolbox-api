@@ -67,13 +67,13 @@ router.post('/', async (req, res, next) => {
     }
 
     // sync asr, tts, nlp service accounts
-    createServiceAccount('asr', serviceAccount).then(e => {
+    createServiceAccount('asr', serviceAccount).catch(e => {
       console.log('failed to sync VVB CVA ASR account:', e.message)
     })
-    createServiceAccount('tts', serviceAccount).then(e => {
+    createServiceAccount('tts', serviceAccount).catch(e => {
       console.log('failed to sync VVB CVA TTS account:', e.message)
     })
-    createServiceAccount('nlp', serviceAccount).then(e => {
+    createServiceAccount('nlp', serviceAccount).catch(e => {
       console.log('failed to sync VVB CVA NLP account:', e.message)
     })
   } catch (e) {
