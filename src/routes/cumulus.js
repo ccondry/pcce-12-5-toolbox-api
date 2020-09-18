@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const db = require('../models/db')
+const vvb = require('../models/vvb')
 
 // get current user Cumulus configuration
 router.get('/', async (req, res, next) => {
@@ -32,7 +33,6 @@ router.post('/', async (req, res, next) => {
       // update config
       await db.updateOne('toolbox', 'cumulus.config', {userId}, {$set: req.body})
       console.log('Successfully updated Cumulus configuration for user', userId)
-      return res.status(202).send()
     } else {
       // create config
       // copy request body
@@ -41,13 +41,51 @@ router.post('/', async (req, res, next) => {
       body.userId = userId
       await db.insertOne('toolbox', 'cumulus.config', body)
       console.log('Successfully created Cumulus configuration for user', userId)
-      return res.status(202).send()
     }
+    // get vertical
+    const verticalConfig = await vertical.get(req.body.vertical)
+    
+    // get GCP key for this project ID from cumulus-api
+    const key = await gcpCredential.get(verticalConfig.gcpProjectId)
+
+    // create service account data object
+    const serviceAccount = {
+      name: verticalConfig.gcpProjectId,
+      description: `${req.user.username} ${userId}`,
+      key
+    }
+
+    // create or update asr, tts, nlp service accounts
+    await createServiceAccount('asr', serviceAccount)
+    await createServiceAccount('tts', serviceAccount)
+    await createServiceAccount('nlp', serviceAccount)
+    // success
+    return res.status(202).send()
   } catch (e) {
     // failed
     console.error('failed to update Cumulus demo configuration for user', userId, ':', e.message)
     return res.status(500).send(e.message)
   }
 })
+
+async function createServiceAccount (type, serviceAccount) {
+  let existing
+  try {
+    // look for existing account
+    existing = await vvb.cva[type].getServiceAccount(serviceAccount.name)
+  } catch (e) {
+    // not found?
+    if (e.message.startsWith('404')) {
+      console.log(type + ' service account not found. creating it...')
+      // create
+      await vvb.cva[type].createServiceAccount(serviceAccount)
+    }
+  }
+  // update existing NLP
+  if (existing) {
+    console.log('found existing ' + type + ' service account. updating it...')
+    await vvb.cva[type].updateServiceAccount(serviceAccount)
+  }
+}
 
 module.exports = router

@@ -36,6 +36,7 @@
     "mongodb": "^3.3.3",
     "morgan": "^1.9.1",
     "mssql": "^5.0.5",
+    "node-fetch": "^2.6.1",
     "node-uuid": "^1.4.8",
     "nodemailer": "^4.3.1",
     "query-string": "^5.0.1",
@@ -45,6 +46,7 @@
     "serve-favicon": "^2.5.0",
     "simple-ldap-client": "^0.6.5",
     "tmp": "0.0.33",
-    "unirest": "^0.6.0"
+    "unirest": "^0.6.0",
+    "vvb-client": "^1.2.1"
   }
 }
