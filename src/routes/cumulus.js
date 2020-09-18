@@ -67,15 +67,9 @@ router.post('/', async (req, res, next) => {
     }
 
     // sync asr, tts, nlp service accounts
-    createServiceAccount('asr', serviceAccount).catch(e => {
-      console.log('failed to sync VVB CVA ASR account:', e.message)
-    })
-    createServiceAccount('tts', serviceAccount).catch(e => {
-      console.log('failed to sync VVB CVA TTS account:', e.message)
-    })
-    createServiceAccount('nlp', serviceAccount).catch(e => {
-      console.log('failed to sync VVB CVA NLP account:', e.message)
-    })
+    await createServiceAccount('asr', serviceAccount)
+    await createServiceAccount('tts', serviceAccount)
+    await createServiceAccount('nlp', serviceAccount)
   } catch (e) {
     console.log('failed to sync VVB CVA service accounts:', e.message)
   }
@@ -92,6 +86,8 @@ async function createServiceAccount (type, serviceAccount) {
       console.log(type + ' service account not found. creating it...')
       // create
       await vvb.cva[type].createServiceAccount(serviceAccount)
+    } else {
+      console.log(type + ' service account error: ' + e.message)
     }
   }
   // update existing NLP
