@@ -2,6 +2,8 @@ const express = require('express')
 const router = express.Router()
 const db = require('../models/db')
 const vvb = require('../models/vvb')
+const vertical = require('../models/vertical')
+const gcpCredential = require('../models/gcp-credential')
 
 // get current user Cumulus configuration
 router.get('/', async (req, res, next) => {
