@@ -8,8 +8,8 @@ const teamsLogger = require('../teams-logger')
 // const user = require('./user.json')
 const VPN_USER_GROUP = process.env.VPN_USER_GROUP || 'CN=Demo Admins,CN=Users,DC=dcloud,DC=cisco,DC=com'
 const DEFAULT_AGENT_PASSWORD = process.env.DEFAULT_AGENT_PASSWORD || 'C1sco12345'
-const CCE_EGAIN_CHAT_SG = process.env.CCE_EGAIN_CHAT_SG
-const CCE_EGAIN_EMAIL_SG = process.env.CCE_EGAIN_EMAIL_SG
+// const CCE_EGAIN_CHAT_SG = process.env.CCE_EGAIN_CHAT_SG
+// const CCE_EGAIN_EMAIL_SG = process.env.CCE_EGAIN_EMAIL_SG
 const previewCampaignModel = require('./demo-user/campaign-preview')
 const ivrCampaignModel = require('./demo-user/campaign-ivr')
 const agentCampaignModel = require('./demo-user/campaign-agent')
