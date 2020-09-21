@@ -155,7 +155,7 @@ module.exports = async function (user, password, agentPassword = DEFAULT_AGENT_P
       roleId
     })
 
-    // Call Type
+    // Voice Call Type
     const callTypeId = await provision.createOrGetCallType(departmentId, user.id)
 
     // Teams
@@ -1152,7 +1152,9 @@ module.exports = async function (user, password, agentPassword = DEFAULT_AGENT_P
       // outbound preview agent skill group ID
       obPreviewAgentSgId,
       // outbound IVR skill group ID
-      obIvrSgId
+      obIvrSgId,
+      // voice call type ID
+      voiceCtId: callTypeId
     }
   } catch (e) {
     if (e.request && e.response.data) {
