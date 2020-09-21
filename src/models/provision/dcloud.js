@@ -13,11 +13,12 @@ const CCE_EGAIN_EMAIL_SG = process.env.CCE_EGAIN_EMAIL_SG
 const previewCampaignModel = require('./demo-user/campaign-preview')
 const ivrCampaignModel = require('./demo-user/campaign-ivr')
 const agentCampaignModel = require('./demo-user/campaign-agent')
-const mainLayout = require('./demo-user/main-layout')
-const uwfLayout = require('./demo-user/uwf-layout')
-const outboundLayout = require('./demo-user/outbound-layout')
-const crmLayout = require('./demo-user/crm-layout')
 
+const cumulusMainTeamId = process.env.CUMULUS_MAIN_TEAM_ID
+const cumulusCrmTeamId = process.env.CUMULUS_CRM_TEAM_ID
+const cumulusUwfTeamId = process.env.CUMULUS_UWF_TEAM_ID
+const cumulusOutboundTeamId = process.env.CUMULUS_OUTBOUND_TEAM_ID
+      
 function sleep (ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -658,31 +659,31 @@ module.exports = async function (user, password, agentPassword = DEFAULT_AGENT_P
     // copy Finesse Team layout XML from template teams to our new teams
     // copy main layout config
     try {
-      await provision.setLayoutConfig(mainTeamId, mainLayout)
-      console.log('successfully copied Finesse Team Layout XML from template XML', 'CumulusMain', 'to', mainTeamId, 'for', user.username, user.id)
+      await provision.copyLayoutConfig(cumulusMainTeamId, mainTeamId)
+      console.log('successfully copied Finesse Team Layout XML from team', cumulusMainTeamId, 'to', mainTeamId, 'for', user.username, user.id)
     } catch (e) {
-      console.warn('failed to copy Finesse Team Layout XML from template XML', 'CumulusMain', 'to', mainTeamId, 'for', user.username, user.id, e.message)
+      console.warn('failed to copy Finesse Team Layout XML from team', cumulusMainTeamId, 'to', mainTeamId, 'for', user.username, user.id, e.message)
     }
     // copy CRM layout config
     try {
-      await provision.setLayoutConfig(crmTeamId, crmLayout)
-      console.log('successfully copied Finesse Team Layout XML from template XML', 'CumulusCRM', 'to', crmTeamId, 'for', user.username, user.id)
+      await provision.copyLayoutConfig(cumulusCrmTeamId, crmTeamId)
+      console.log('successfully copied Finesse Team Layout XML from team', cumulusCrmTeamId, 'to', crmTeamId, 'for', user.username, user.id)
     } catch (e) {
-      console.warn('failed to copy Finesse Team Layout XML from template XML', 'CumulusCRM', 'to', crmTeamId, 'for', user.username, user.id, e.message)
-    }
+      console.warn('failed to copy Finesse Team Layout XML from team', cumulusCrmTeamId, 'to', crmTeamId, 'for', user.username, user.id, e.message)
+   CumulusUWF }
     // copy UWF layout config
     try {
-      await provision.setLayoutConfig(uwfTeamId, uwfLayout)
-      console.log('successfully copied Finesse Team Layout XML from template XML', 'CumulusUWF', 'to', uwfTeamId, 'for', user.username, user.id)
+      await provision.copyLayoutConfig(cumulusUwfTeamId, uwfTeamId)
+      console.log('successfully copied Finesse Team Layout XML from team', cumulusUwfTeamId, 'to', uwfTeamId, 'for', user.username, user.id)
     } catch (e) {
-      console.warn('failed to copy Finesse Team Layout XML from template XML', 'CumulusUWF', 'to', uwfTeamId, 'for', user.username, user.id, e.message)
+      console.warn('failed to copy Finesse Team Layout XML from team', cumulusUwfTeamId, 'to', uwfTeamId, 'for', user.username, user.id, e.message)
     }
     // copy Outbound layout config
     try {
-      await provision.setLayoutConfig(outboundTeamId, outboundLayout)
-      console.log('successfully copied Finesse Team Layout XML from template XML', 'CumulusOutbound', 'to', outboundTeamId, 'for', user.username, user.id)
+      await provision.copyLayoutConfig(cumulusOutboundTeamId, outboundTeamId)
+      console.log('successfully copied Finesse Team Layout XML from team', cumulusOutboundTeamId, 'to', outboundTeamId, 'for', user.username, user.id)
     } catch (e) {
-      console.warn('failed to copy Finesse Team Layout XML from template XML', 'CumulusOutbound', 'to', outboundTeamId, 'for', user.username, user.id, e.message)
+      console.warn('failed to copy Finesse Team Layout XML from team', cumulusOutboundTeamId, 'to', outboundTeamId, 'for', user.username, user.id, e.message)
     }
 
     // create email account on branding in linux
