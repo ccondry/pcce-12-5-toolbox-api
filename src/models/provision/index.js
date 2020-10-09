@@ -50,10 +50,13 @@ const CCE_MRD_EMAIL = process.env.CCE_MRD_EMAIL || '5000'
 const CCE_MRD_CHAT = process.env.CCE_MRD_CHAT || '5002'
 // const CCE_MRD_TASK = process.env.CCE_MRD_TASK || '5003'
 
+// max retries for CCE operations to get 401 error
+const maxRetries = 50
+
 // const departmentAdminUsernameSuffix = '_admin'
 async function getCceDepartment (username) {
   try {
-    const departments = await cce.list('department', {q: username})
+    const departments = await retryCceList('department', {q: username})
     // return the department object, or null if not found
     return departments.find(v => v.name === username) || null
   } catch (e) {
@@ -124,13 +127,46 @@ async function findTeamId (name) {
     throw e
   }
 }
+async function retryCceCreate (type, data) {
+  return retryCce('create', type, data)
+}
+async function retryCceList (type, query) {
+  return retryCce('list', type, query)
+}
+async function retryCceModify (type, id, data) {
+  return retryCce('modify', type, id, data)
+}
+
+async function retryCce (operation, type, data1, data2) {
+  let lastError
+  let count = 0
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      items = await cce[operation](type, data1, data2)
+      if (count > 0) {
+        console.log(`retryCce ${operation} ${type} success after ${count} retries`)
+      }
+      return items
+    } catch (e) {
+      lastError = e
+      if (e.response.status === 401) {
+        count++
+        continue
+      } else {
+        throw e
+      }
+    }
+  }
+  throw lastError
+}
+
 // create CCE object and return the ID
 async function cceCreate ({type, data}) {
   try {
     // console.debug('creating', type, JSON.stringify(data, null, 2), '...')
     // console.log('creating', type, '...')
     // create new item and get that new ID
-    const newItem = await cce.create(type, data)
+    const newItem = await retryCceCreate(type, data)
     // console.log('newItem =', newItem)
     itemId = newItem.split('/').pop()
     // console.log(type, 'created.', type, 'ID =', itemId)
@@ -147,30 +183,11 @@ async function cceCreate ({type, data}) {
   }
 }
 
-const maxRetries = 50
-
-async function retryCceList (type, query, retries = 3) {
-  let lastError
-  for (let i = 0; i < retries; i++) {
-    try {
-      items = await cce.list(type, query)
-      return items
-    } catch (e) {
-      lastError = e
-      if (e.response.status === 401) {
-        continue
-      } else {
-        throw e
-      }
-    }
-  }
-  throw lastError
-}
 
 // get CCE object
 async function cceGet ({type, query, find}) {
   try {
-    const items = await retryCceList(type, query, maxRetries)
+    const items = await retryCceList(type, query)
     // return the 1 item we are looking for
     const item = items.find(find)
     if (item) {
@@ -215,7 +232,7 @@ async function cceModify ({type, id, item, data}) {
   dataCopy.changeStamp = item.changeStamp
   try {
     // update CCE object
-    await cce.modify(type, id, dataCopy)
+    await retryCceModify(type, id, dataCopy)
   } catch (e) {
     // failed to update CCE object. log and rethrow.
     console.error('failed to update CCE ' + type, id, e.message)
@@ -375,13 +392,13 @@ async function getStatus ({
       })
 
       // CCE Teams
-      status.teams = await cce.list('agentTeam', query)
+      status.teams = await retryCceList('agentTeam', query)
 
       // Call Types
-      status.callTypes = await cce.list('callType', query)
+      status.callTypes = await retryCceList('callType', query)
 
       // PQ Attributes
-      const attributes = await cce.list('attribute', query)
+      const attributes = await retryCceList('attribute', query)
 
       // Boolean PQ Attributes
       status.booleanAttributes = attributes.filter(v => v.dataType === '3')
@@ -390,7 +407,7 @@ async function getStatus ({
       status.proficiencyAttributes = attributes.filter(v => v.dataType === '4')
 
       // Precision Queues
-      const myPqs = await cce.list('precisionQueue', query)
+      const myPqs = await retryCceList('precisionQueue', query)
 
       // extract voice, chat, email, task PQs
       status.voicePqs = myPqs.filter(v => {
@@ -407,10 +424,10 @@ async function getStatus ({
       })
 
       // get outbound skillgroups
-      status.skillGroups = await cce.list('skillGroup', query)
+      status.skillGroups = await retryCceList('skillGroup', query)
 
       // get agents
-      const agents = await cce.list('agent', query)
+      const agents = await retryCceList('agent', query)
 
       // regular agents
       status.agents = agents.filter(v => v.supervisor == false || v.supervisor === 'false')
@@ -419,7 +436,7 @@ async function getStatus ({
       status.supervisors = agents.filter(v => v.supervisor == true || v.supervisor === 'true')
 
       // get dialed numbers in department
-      // const dialedNumbers = await cce.list('dialedNumber', query)
+      // const dialedNumbers = await retryCceList('dialedNumber', query)
 
       // outbound agent campaign dialed numbers
       // status.outboundAgentDialedNumbers = dialedNumbers.filter(v => v.callType.refURL.split('/').pop() === process.env.cce_agent_campaign_ct_id)
