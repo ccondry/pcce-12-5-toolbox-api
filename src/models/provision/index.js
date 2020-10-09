@@ -147,16 +147,32 @@ async function cceCreate ({type, data}) {
   }
 }
 
+const maxRetries = 50
+
+async function retryCceList (type, query, retries = 3) {
+  let lastError
+  for (let i = 0; i < retries; i++) {
+    try {
+      items = await cce.list(type, query)
+      return items
+    } catch (e) {
+      lastError = e
+      if (e.response.status === 401) {
+        continue
+      } else {
+        throw e
+      }
+    }
+  }
+  throw lastError
+}
+
 // get CCE object
 async function cceGet ({type, query, find}) {
   try {
-    // console.log('searching for ' + type, query)
-    // search for existing items
-    const items = await cce.list(type, query)
-    // console.log(`cceGet found ${items.length} ${type} objects`)
-    // get the 1 item we are looking for
+    const items = await retryCceList(type, query, maxRetries)
+    // return the 1 item we are looking for
     const item = items.find(find)
-    let itemId
     if (item) {
       // return item
       return item
@@ -164,8 +180,7 @@ async function cceGet ({type, query, find}) {
       return null
     }
   } catch (e) {
-    console.error('failed to cceGet', type, query, e.message)
-    throw e.message
+    throw Error(`failed to cceGet ${type} ${query}: ${e.message}`)
   }
 }
 
