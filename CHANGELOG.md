@@ -3,6 +3,15 @@
 Versions are dates in YYYY.MM.DD.X format, where X is the revision number
 
 
+# 2020.10.9-3
+
+### Features
+* **Logging:** Reduce logging
+
+### Bug Fixes
+* **Provision:** Fix new call type provisioning
+
+
 # 2020.10.9.2
 
 ### Features
