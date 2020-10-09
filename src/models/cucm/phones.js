@@ -105,7 +105,7 @@ module.exports = {
 // })
 
 async function create (body) {
-  console.log('received request to create CUCM phone:', body)
+  // console.log('received request to create CUCM phone:', body)
   try {
     body.routePartitionName = body.routePartitionName || process.env.ROUTE_PARTITION
     switch (body.type) {
@@ -113,7 +113,7 @@ async function create (body) {
         // LCP phone
         body.type = 'LCP'
         // body.pattern = '1070' + body.userid
-        console.log('creating LCP phone', body)
+        // console.log('creating LCP phone', body)
         await lib.createMobileAgentPhone(axl, body)
         return
       }
@@ -121,26 +121,26 @@ async function create (body) {
         // RCP phone
         body.type = 'RCP'
         // body.pattern = '1060' + body.userid
-        console.log('creating RCP phone', body)
+        // console.log('creating RCP phone', body)
         await lib.createMobileAgentPhone(axl, body)
         return
       }
       case 'jabber': {
         // create jabber for desktop phone
-        console.log('creating Jabber for Desktop phone', body)
+        // console.log('creating Jabber for Desktop phone', body)
         await lib.createJabberDesktopPhone(axl, body)
         return res.status(201).send()
       }
       case 'virtual': {
         // create virtual phone
         body.virtualDnPrefix = process.env.VIRTUAL_DN_PREFIX
-        console.log('creating CTIRD virtual phone', body)
+        // console.log('creating CTIRD virtual phone', body)
         await lib.createVirtualPhone(axl, body)
         return
       }
       case 'camelot': {
         // create camelot phone
-        console.log('creating Camelot virtual phone', body)
+        // console.log('creating Camelot virtual phone', body)
         await lib.createCamelotPhone(axl, body)
         return
       }
@@ -151,7 +151,7 @@ async function create (body) {
         body.protocol = 'SCCP'
         body.phoneButtonTemplateName = 'Standard CIPC SCCP'
         // create hard phone
-        console.log(`creating ${body.model} ${body.protocol} hard phone`, body)
+        // console.log(`creating ${body.model} ${body.protocol} hard phone`, body)
         await lib.createHardPhone(axl, body)
         return
       }
@@ -160,7 +160,7 @@ async function create (body) {
         body.product = 'Cisco DX650'
         body.protocol = 'SIP'
         // create hard phone
-        console.log(`creating ${body.model} ${body.protocol} hard phone`, body)
+        // console.log(`creating ${body.model} ${body.protocol} hard phone`, body)
         await lib.createHardPhone(axl, body)
         return
       }
@@ -169,7 +169,7 @@ async function create (body) {
         body.product = 'Cisco DX70'
         body.protocol = 'SIP'
         // create hard phone
-        console.log(`creating ${body.model} ${body.protocol} hard phone`, body)
+        // console.log(`creating ${body.model} ${body.protocol} hard phone`, body)
         await lib.createHardPhone(axl, body)
         return
       }
@@ -178,12 +178,12 @@ async function create (body) {
         body.product = 'Cisco DX80'
         body.protocol = 'SIP'
         // create hard phone
-        console.log(`creating ${body.model} ${body.protocol} hard phone`, body)
+        // console.log(`creating ${body.model} ${body.protocol} hard phone`, body)
         await lib.createHardPhone(axl, body)
         return
       }
       default: {
-        console.log('phone type', body.type, 'not recognized')
+        // console.log('phone type', body.type, 'not recognized')
         throw new Error('phone type ' + body.type + ' not recognized')
       }
     }
