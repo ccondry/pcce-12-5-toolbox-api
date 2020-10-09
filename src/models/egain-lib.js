@@ -11,7 +11,7 @@ module.exports = class EgainExpress {
   }
 
   async addRoles ({skillTargetId}) {
-    console.log(`adding roles to agent ${skillTargetId} in ${this.platform}`)
+    // console.log(`adding roles to agent ${skillTargetId} in ${this.platform}`)
     // const promises = []
     // add each role to agent
     for (const roleId of this.roleIds) {
@@ -42,7 +42,7 @@ module.exports = class EgainExpress {
     attribute,
     value
   }) {
-    console.log(`request received to set ${attribute} of agent ${skillTargetId} to ${value} in ${this.platform}`)
+    // console.log(`request received to set ${attribute} of agent ${skillTargetId} to ${value} in ${this.platform}`)
     try {
       const results1 = await this.client.agent.changeAttribute(skillTargetId, attribute, value)
       const results2 = await this.client.agent.updateScreenName(skillTargetId)
@@ -57,7 +57,7 @@ module.exports = class EgainExpress {
     skillTargetId,
     roleId
   }) {
-    console.log(`request received to add role ${roleId} to agent ${skillTargetId} in ${this.platform}`)
+    // console.log(`request received to add role ${roleId} to agent ${skillTargetId} in ${this.platform}`)
     try {
       const results = await this.client.agent.addRole(skillTargetId, roleId)
       console.log(`successfully added role ${roleId} to agent ${skillTargetId} in ${this.platform}`)
@@ -72,7 +72,7 @@ module.exports = class EgainExpress {
     skillTargetId,
     licenseKey
   }) {
-    console.log(`request received to add license ${licenseKey} to agent ${skillTargetId} in ${this.platform}`)
+    // console.log(`request received to add license ${licenseKey} to agent ${skillTargetId} in ${this.platform}`)
     try {
       const results = await this.client.agent.addLicense(skillTargetId, licenseKey)
       console.log(`successfully added license ${licenseKey} to agent ${skillTargetId} in ${this.platform}`)
@@ -90,7 +90,7 @@ module.exports = class EgainExpress {
     skillTargetId,
     departmentName
   }) {
-    console.log(`request received to add ICM agent ${skillTargetId} to ${this.platform}`)
+    // console.log(`request received to add ICM agent ${skillTargetId} to ${this.platform}`)
     try {
       // get department ID first
       const departmentId = await this.getDepartmentId({departmentName})
@@ -118,7 +118,7 @@ module.exports = class EgainExpress {
     roleName,
     departmentName
   }) {
-    console.log(`request received to find role named ${roleName} in ${this.platform}`)
+    // console.log(`request received to find role named ${roleName} in ${this.platform}`)
     try {
       // get department ID first
       const departmentId = await this.getDepartmentId({departmentName})
@@ -138,7 +138,7 @@ module.exports = class EgainExpress {
   async getUserQueues ({
     username
   }) {
-    console.log(`request received to get user queues for ${username} in ${this.platform}`)
+    // console.log(`request received to get user queues for ${username} in ${this.platform}`)
     try {
       const results = await this.client.agent.getUserQueues({
         username
@@ -156,7 +156,7 @@ module.exports = class EgainExpress {
     queueId,
     concurrentTaskLimit
   }) {
-    console.log(`request received to set concurrent task limit for user ID ${userId} and queue ID ${queueId} in ${this.platform}`)
+    // console.log(`request received to set concurrent task limit for user ID ${userId} and queue ID ${queueId} in ${this.platform}`)
     try {
       const results = await this.client.agent.setConcurrentTaskLimit({
         userId,
@@ -174,7 +174,7 @@ module.exports = class EgainExpress {
   async getDepartmentId ({
     departmentName
   }) {
-    console.log(`request received to get department ID for department ${departmentName} in ${this.platform}`)
+    // console.log(`request received to get department ID for department ${departmentName} in ${this.platform}`)
     try {
       const department = await this.client.department.find({name: departmentName})
       if (department) {

@@ -67,7 +67,7 @@ async function listUsers ({
 async function addToGroup (body) {
   const userDn = body.userDn
   const groupDn = body.groupDn
-  console.log('request to add LDAP user', userDn, 'to group', groupDn)
+  // console.log('request to add LDAP user', userDn, 'to group', groupDn)
   try {
     await ldap.addToGroup({
       adminDn: process.env.LDAP_ADMIN_DN,
@@ -85,7 +85,7 @@ async function addToGroup (body) {
 }
 
 async function getUser (username) {
-  console.log('request to get user', username)
+  // console.log('request to get user', username)
   const domain = process.env.LDAP_DOMAIN
   const upn = username + '@' + domain
 

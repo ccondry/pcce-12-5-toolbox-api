@@ -24,7 +24,7 @@ module.exports = async function (axl, {
   // make sure the device is not already created
   let error
   try {
-    console.log(`checking if device ${name} already exists`)
+    // console.log(`checking if device ${name} already exists`)
     // device exists
     const results = await axl.getPhone({name})
     console.log(`device ${name} already exists`)
