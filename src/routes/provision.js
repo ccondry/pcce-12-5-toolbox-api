@@ -7,7 +7,7 @@ const db = require('../models/db')
 // get provision status
 router.get('/', async function (req, res) {
   try {
-    console.log('request to get provision status for', req.user.username, `(${req.user.id})...`)
+    // console.log('request to get provision status for', req.user.username, `(${req.user.id})...`)
     const username = req.user.username
     const userId = req.user.id
     // get provision status
@@ -19,7 +19,7 @@ router.get('/', async function (req, res) {
     const query = { $or: [ {username}, {userId} ] }
     const projection = { _id: 0 }
     const body = (await db.findOne('toolbox', 'provision', query, {projection})) || {}
-    console.log('successfully got provision status for', req.user.username, `(${req.user.id}):`, body)
+    // console.log('successfully got provision status for', req.user.username, `(${req.user.id})`)
     // return OK with body
     return res.status(200).send(body)
   } catch (e) {
@@ -70,7 +70,7 @@ router.post('/', async function (req, res) {
       // make sure _id is not set
       delete results._id
       await db.upsert('toolbox', 'cumulus.config', query, results)
-      console.log('successfully created user', req.user.id, 'cumulus config:', results)
+      console.log('successfully created user', req.user.id, 'cumulus config')
     } catch (e) {
       console.log('user', req.user.id, 'cumulus config exists. updating it...')
       // update user demo config for cumulus/branding website
