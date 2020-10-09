@@ -35,7 +35,7 @@ module.exports = async function (user, password, agentPassword = DEFAULT_AGENT_P
     demoBaseConfig = demos[0]
   } catch (e) {
     const message = `failed to get demo base config: ${e.message}`
-    teamsLogger(message)
+    teamsLogger.log(message)
     throw Error(message)
   }
 
