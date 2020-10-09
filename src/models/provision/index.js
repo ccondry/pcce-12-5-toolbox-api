@@ -165,7 +165,7 @@ async function cceGet ({type, query, find}) {
     }
   } catch (e) {
     console.error('failed to cceGet', type, query, e.message)
-    throw e
+    throw e.message
   }
 }
 
@@ -543,7 +543,7 @@ function getDepartmentQuery (userId) {
 }
 
 // create or get Call Type for the user
-function createOrGetCallType (departmentId, userId, update) {
+function createOrGetCallType ({departmentId, userId, update, survey}) {
   const name = 'Cumulus_' + userId
   return cceCreateOrGetId({
     type: 'callType',

@@ -4,6 +4,7 @@ this is the dcloud PCCE instant demo user provisioning script
 
 const provision = require('./index')
 const teamsLogger = require('../teams-logger')
+const fetch = require('../fetch')
 
 // const user = require('./user.json')
 const VPN_USER_GROUP = process.env.VPN_USER_GROUP || 'CN=Demo Admins,CN=Users,DC=dcloud,DC=cisco,DC=com'
@@ -25,6 +26,19 @@ function sleep (ms) {
 
 module.exports = async function (user, password, agentPassword = DEFAULT_AGENT_PASSWORD) {
   let vpnUser
+  // get demo base config
+  let demoBaseConfig
+  try {
+    const url = 'https://mm.cxdemo.net/api/v1/demo'
+    const qs = `?type=${session.type}&version=${session.version}&instant=true`
+    const demos = await fetch(url + qs)
+    demoBaseConfig = demos[0]
+  } catch (e) {
+    const message = `failed to get demo base config: ${e.message}`
+    teamsLogger(message)
+    throw Error(message)
+  }
+
   try {
     // create ldap user for CCE department admin, if password supplied.
     // password should be null when admin user using switch-user to
@@ -155,8 +169,52 @@ module.exports = async function (user, password, agentPassword = DEFAULT_AGENT_P
       roleId
     })
 
-    // Voice Call Type
-    const callTypeId = await provision.createOrGetCallType(departmentId, user.id)
+    // if wxm config does not exist, provide empty object for call type
+    // surveys instead of throwing error
+    demoBaseConfig.wxm = demoBaseConfig.wxm || {}
+
+    // Inbound Voice Call Type
+    const voiceCtId = await provision.createOrGetCallType({
+      departmentId,
+      userId: user.id,
+      update: true,
+      survey: demoBaseConfig.wxm.voice
+    })
+    // Mobile Voice Call Type
+    const mobileCtId = await provision.createOrGetCallType({
+      departmentId,
+      userId: user.id,
+      update: true,
+      survey: demoBaseConfig.wxm.sms
+    })
+    // Gold Voice Call Type
+    const goldCtId = await provision.createOrGetCallType({
+      departmentId,
+      userId: user.id,
+      update: true,
+      survey: demoBaseConfig.wxm.email
+    })
+    // VisualIVR Voice Call Type
+    const visualIvrCtId = await provision.createOrGetCallType({
+      departmentId,
+      userId: user.id,
+      update: true,
+      survey: demoBaseConfig.wxm.sms
+    })
+    // CVA Voice Call Type
+    const cvaCtId = await provision.createOrGetCallType({
+      departmentId,
+      userId: user.id,
+      update: true,
+      survey: demoBaseConfig.wxm.email
+    })
+    // AI Voice Call Type
+    const aiCtId = await provision.createOrGetCallType({
+      departmentId,
+      userId: user.id,
+      update: true,
+      survey: demoBaseConfig.wxm.email
+    })
 
     // Teams
     const mainTeamId = await provision.createOrGetTeam({
@@ -1154,7 +1212,17 @@ module.exports = async function (user, password, agentPassword = DEFAULT_AGENT_P
       // outbound IVR skill group ID
       obIvrSgId,
       // voice call type ID
-      voiceCtId: callTypeId
+      voiceCtId,
+      // mobile call type ID
+      mobileCtId,
+      // gold call type ID
+      goldCtId,
+      // visual IVR call type ID
+      visualIvrCtId,
+      // CVA call type ID
+      cvaCtId,
+      // AI call type ID
+      aiCtId
     }
   } catch (e) {
     if (e.request && e.response.data) {

@@ -1,4 +1,11 @@
-module.exports = function ({name, description, departmentId, serviceLevelThreshold, serviceLevelType}) {
+module.exports = function ({
+  name,
+  description,
+  departmentId,
+  serviceLevelThreshold,
+  serviceLevelType,
+  survey
+}) {
   // name is required
   const data = {
     name
@@ -13,6 +20,7 @@ module.exports = function ({name, description, departmentId, serviceLevelThresho
   }
   if (serviceLevelThreshold) data.serviceLevelThreshold = serviceLevelThreshold
   if (serviceLevelType) data.serviceLevelType = serviceLevelType
+  if (survey) data.survey = survey
 
   return data
 }
