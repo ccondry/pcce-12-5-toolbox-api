@@ -10,12 +10,14 @@
     "test:cce": "NODE_EXTRA_CA_CERTS=extra-CAs.pem node test/cce",
     "test:finesse": "NODE_EXTRA_CA_CERTS=extra-CAs.pem node test/finesse",
     "test:outbound": "NODE_EXTRA_CA_CERTS=extra-CAs.pem node test/outbound",
-    "test:role": "NODE_EXTRA_CA_CERTS=extra-CAs.pem node test/role"
+    "test:role": "NODE_EXTRA_CA_CERTS=extra-CAs.pem node test/role",
+    "test:deprovision": "NODE_EXTRA_CA_CERTS=extra-CAs.pem node test/deprovision",
+    "test:wxm": "NODE_EXTRA_CA_CERTS=extra-CAs.pem node test/wxm"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
     "busboy": "^0.2.14",
-    "cce-unified-config": "^0.9.4",
+    "cce-unified-config": "../cce-unified-config",
     "cookie-parser": "~1.4.3",
     "cors": "^2.8.1",
     "cucm-axl": "^0.1.9",
