@@ -30,7 +30,7 @@ module.exports = async function (user, password, agentPassword = DEFAULT_AGENT_P
   let demoBaseConfig
   try {
     const url = 'https://mm.cxdemo.net/api/v1/demo'
-    const qs = `?type=${session.type}&version=${session.version}&instant=true`
+    const qs = `?type=pcce&version=12.5v1&instant=true`
     const demos = await fetch(url + qs)
     demoBaseConfig = demos[0]
   } catch (e) {
