@@ -175,6 +175,7 @@ module.exports = async function (user, password, agentPassword = DEFAULT_AGENT_P
 
     // Inbound Voice Call Type
     const voiceCtId = await provision.createOrGetCallType({
+      name: 'CumulusInbound_' + user.id,
       departmentId,
       userId: user.id,
       update: true,
@@ -182,6 +183,7 @@ module.exports = async function (user, password, agentPassword = DEFAULT_AGENT_P
     })
     // Mobile Voice Call Type
     const mobileCtId = await provision.createOrGetCallType({
+      name: 'CumulusMobile_' + user.id,
       departmentId,
       userId: user.id,
       update: true,
@@ -189,6 +191,7 @@ module.exports = async function (user, password, agentPassword = DEFAULT_AGENT_P
     })
     // Gold Voice Call Type
     const goldCtId = await provision.createOrGetCallType({
+      name: 'CumulusCertification_' + user.id,
       departmentId,
       userId: user.id,
       update: true,
@@ -196,6 +199,7 @@ module.exports = async function (user, password, agentPassword = DEFAULT_AGENT_P
     })
     // VisualIVR Voice Call Type
     const visualIvrCtId = await provision.createOrGetCallType({
+      name: 'CumulusVIVR_' + user.id,
       departmentId,
       userId: user.id,
       update: true,
@@ -203,6 +207,7 @@ module.exports = async function (user, password, agentPassword = DEFAULT_AGENT_P
     })
     // CVA Voice Call Type
     const cvaCtId = await provision.createOrGetCallType({
+      name: 'CumulusInboundAI_' + user.id,
       departmentId,
       userId: user.id,
       update: true,
@@ -210,6 +215,7 @@ module.exports = async function (user, password, agentPassword = DEFAULT_AGENT_P
     })
     // AI Voice Call Type
     const aiCtId = await provision.createOrGetCallType({
+      name: 'CumulusConversationalIVR_' + user.id,
       departmentId,
       userId: user.id,
       update: true,

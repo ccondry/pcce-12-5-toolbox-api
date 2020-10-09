@@ -575,8 +575,7 @@ function getDepartmentQuery (userId) {
 }
 
 // create or get Call Type for the user
-function createOrGetCallType ({departmentId, userId, update, survey}) {
-  const name = 'Cumulus_' + userId
+function createOrGetCallType ({name, departmentId, userId, update, survey}) {
   return cceCreateOrGetId({
     type: 'callType',
     query: getDepartmentQuery(userId),
