@@ -90,14 +90,14 @@ async function getUser (username) {
   const upn = username + '@' + domain
 
   try {
-    console.log('running ldap.adminGetUser...')
+    // console.log('running ldap.adminGetUser...')
     const user = await ldap.adminGetUser({
       adminDn: process.env.LDAP_ADMIN_DN,
       adminPassword: process.env.LDAP_ADMIN_PASSWORD,
       upn,
       attributes
     })
-    console.log('ldap.adminGetUser finished.')
+    // console.log('ldap.adminGetUser finished.')
     if (user) {
       // respond OK with user info
       return user
@@ -129,7 +129,7 @@ async function resetPassword (body) {
       throw new Error(error)
     }
     const user = body.userDn || body.email || body.username || body.email
-    console.log('password reset request received for ' + user)
+    // console.log('password reset request received for ' + user)
 
     const adminCreds = {
       adminDn: process.env.LDAP_ADMIN_DN,
@@ -148,7 +148,7 @@ async function resetPassword (body) {
 }
 
 async function changePassword (body) {
-  console.log('password change request received for username ' + body.username)
+  // console.log('password change request received for username ' + body.username)
   try {
     await ldap.changePassword({
       username: body.username,
