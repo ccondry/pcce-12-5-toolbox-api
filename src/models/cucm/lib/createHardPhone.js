@@ -33,7 +33,7 @@ module.exports = async function (axl, {
   // make sure the device is not already created
   let existingPhone
   try {
-    console.log(`checking if device ${name} already exists...`)
+    // console.log(`checking if device ${name} already exists...`)
     // device exists
     existingPhone = await axl.getPhone({name})
   } catch (e) {
@@ -43,7 +43,7 @@ module.exports = async function (axl, {
 
   // so is there an existing phone?
   if (existingPhone) {
-    console.log(`device ${name} already exists. deleting existing phone...`)
+    // console.log(`device ${name} already exists. deleting existing phone...`)
     // remove the existing phone with that name
     await axl.removePhone({name})
     console.log(`device ${name} deleted successfully.`)
