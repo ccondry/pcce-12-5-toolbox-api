@@ -548,7 +548,7 @@ function createOrGetCallType ({departmentId, userId, update, survey}) {
   return cceCreateOrGetId({
     type: 'callType',
     query: getDepartmentQuery(userId),
-    data: callTypeModel({name, departmentId}),
+    data: callTypeModel({name, departmentId, survey}),
     find (v) {return v.name === name},
     update
   })
