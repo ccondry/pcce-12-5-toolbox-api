@@ -1244,6 +1244,16 @@ async function copyLayoutConfig (from, to) {
   }
 }
 
+// copy Finesse wrap up config from team ID "from" to team ID "to"
+async function copyWrapUpConfig (from, to) {
+  try {
+    const config = await finesse.getFromTeam(from, 'WrapUpReasons')
+    await finesse.saveToTeam(to, 'WrapUpReasons', config)
+  } catch (e) {
+    throw e
+  }
+}
+
 // set Finesse layout XML for team
 // expect plain, unescaped XML string in layoutXml
 async function setLayoutConfig (teamId, layoutXml) {
@@ -1419,6 +1429,7 @@ module.exports = {
   phones,
   copyLayoutConfig,
   setLayoutConfig,
+  copyWrapUpConfig,
   addToGroup,
   createEmail,
   ece,

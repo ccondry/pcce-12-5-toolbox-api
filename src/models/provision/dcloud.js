@@ -750,6 +750,14 @@ module.exports = async function (user, password, agentPassword = DEFAULT_AGENT_P
       console.warn('failed to copy Finesse Team Layout XML from team', cumulusOutboundTeamId, 'to', outboundTeamId, 'for', user.username, user.id, e.message)
     }
 
+    // copy Finesse Team WrapUp from template team to our new teams
+    try {
+      await provision.copyWrapUpConfig(cumulusMainTeamId, mainTeamId)
+      console.log('successfully copied Finesse Wrap-Up Codes from team', cumulusMainTeamId, 'to', mainTeamId, 'for', user.username, user.id)
+    } catch (e) {
+      console.warn('failed to copy Finesse Wrap-Up Codes from team', cumulusMainTeamId, 'to', mainTeamId, 'for', user.username, user.id, e.message)
+    }
+
     // create email account on branding in linux
     try {
       console.log('creating email account on linux...')
