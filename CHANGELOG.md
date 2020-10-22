@@ -1,7 +1,13 @@
 # Change Log for pcce-12-5-toolbox-api 
 
-Versions are semever-compatible dates in YYYY.MM.DD-X format, where X is the
-revision number
+Versions are semever-compatible dates in YYYY.MM.DD-X format,
+where X is the revision number
+
+
+# 2020.10.22-1
+
+### Features
+* **Provision:** Provision now resets LDAP password to C1sco12345
 
 
 # 2020.10.22
