@@ -4,6 +4,12 @@ Versions are semever-compatible dates in YYYY.MM.DD-X format,
 where X is the revision number
 
 
+# 2020.10.22-3
+
+### Features
+* **SSO:** roll back changes to SSO and toolbox/VPN passwords
+
+
 # 2020.10.22-2
 
 ### Features
