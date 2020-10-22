@@ -162,6 +162,8 @@ app.use(urlBase + '/brand', require('./routes/brand'))
 app.use(urlBase + '/vertical', require('./routes/brand'))
 // finesse layout
 app.use(urlBase + '/finesse', require('./routes/finesse'))
+// outbound campaigns
+app.use(urlBase + '/campaign', require('./routes/campaign'))
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
