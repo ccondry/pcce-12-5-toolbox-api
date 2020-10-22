@@ -32,9 +32,25 @@ router.get('/', async function (req, res) {
 // provision user for dcloud
 router.post('/', async function (req, res) {
   console.log(`starting provision for ${req.user.username} (${req.user.id})...`)
+  // is admin user using switch-user?
+  const isSu = req.user.suJwt
+  // get ldap account password from body
+  let password = req.body.password
+  // validate input
+  // ignore password when admin using switch-user
+  if (!password && !isSu) {
+    console.log(`failed to provision ${req.user.username} (${req.user.id}): request body did not contain password.`)
+    return res.status(400).send('Request body should have property "password"')
+  }
   try {
+    // when admin using switch-user, set password null to skip the ldap user
+    // creation step. this allows admin to re-provision user without changing
+    // or setting the user password
+    if (isSu) {
+      password = null
+    }
     // start provision and continue
-    const results = await dcloud(req.user)
+    const results = await dcloud(req.user, password)
     // log when provision async task is complete
     console.debug(`successfully finished provision for ${req.user.username} (${req.user.id}). results:`, results)
     // update provision database for user
