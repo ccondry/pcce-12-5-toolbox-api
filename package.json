@@ -12,7 +12,8 @@
     "test:outbound": "NODE_EXTRA_CA_CERTS=extra-CAs.pem node test/outbound",
     "test:role": "NODE_EXTRA_CA_CERTS=extra-CAs.pem node test/role",
     "test:deprovision": "NODE_EXTRA_CA_CERTS=extra-CAs.pem node test/deprovision",
-    "test:wxm": "NODE_EXTRA_CA_CERTS=extra-CAs.pem node test/wxm"
+    "test:wxm": "NODE_EXTRA_CA_CERTS=extra-CAs.pem node test/wxm",
+    "test:campaign": "NODE_EXTRA_CA_CERTS=extra-CAs.pem node test/campaign"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
