@@ -8,7 +8,8 @@ const fetch = require('../fetch')
 
 // const user = require('./user.json')
 const VPN_USER_GROUP = process.env.VPN_USER_GROUP || 'CN=Demo Admins,CN=Users,DC=dcloud,DC=cisco,DC=com'
-const DEFAULT_AGENT_PASSWORD = process.env.DEFAULT_AGENT_PASSWORD || 'C1sco12345'
+// default password for agents and VPN
+const agentPassword = process.env.DEFAULT_AGENT_PASSWORD || 'C1sco12345'
 // const CCE_EGAIN_CHAT_SG = process.env.CCE_EGAIN_CHAT_SG
 // const CCE_EGAIN_EMAIL_SG = process.env.CCE_EGAIN_EMAIL_SG
 const previewCampaignModel = require('./demo-user/campaign-preview')
@@ -24,7 +25,7 @@ function sleep (ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-module.exports = async function (user, password, agentPassword = DEFAULT_AGENT_PASSWORD) {
+module.exports = async function (user) {
   let vpnUser
   // get demo base config
   let demoBaseConfig
@@ -40,35 +41,31 @@ module.exports = async function (user, password, agentPassword = DEFAULT_AGENT_P
   }
 
   try {
-    // create ldap user for CCE department admin, if password supplied.
-    // password should be null when admin user using switch-user to
-    // reprovision a user
-    if (password) {
-      try {
-        vpnUser = await provision.createLdapCceAdminUser(user, password)
-      } catch (e) {
-        throw e
+    // create ldap user for CCE department admin
+    try {
+      vpnUser = await provision.createLdapCceAdminUser(user, agentPassword)
+    } catch (e) {
+      throw e
+    }
+    // add ldap user to the vpn group
+    try {
+      await provision.addToGroup({
+        userDn: vpnUser.distinguishedName,
+        groupDn: VPN_USER_GROUP
+      })
+    } catch (e) {
+      if (e.message.indexOf('problem 6005 (ENTRY_EXISTS)') >= 0) {
+        // user already in group - just continue
+      } else if (e.message.indexOf('problem 2001 (NO_OBJECT)') >= 0) {
+        // VPN_USER_GROUP not exist
+        // log to teams
+        teamsLogger.log(`failed to add LDAP user ${user.username} (${user.id}) to LDAP group ${VPN_USER_GROUP}):`, e.message)
+        teamsLogger.log(`<@all> Please create this LDAP user group in my datacenter: \`${VPN_USER_GROUP}\``)
+      } else {
+        // any other error - just log to teams
+        teamsLogger.log(`failed to add LDAP user ${user.username} (${user.id}) to LDAP group ${VPN_USER_GROUP}):`, e.message)
       }
-      // add ldap user to the vpn group
-      try {
-        await provision.addToGroup({
-          userDn: vpnUser.distinguishedName,
-          groupDn: VPN_USER_GROUP
-        })
-      } catch (e) {
-        if (e.message.indexOf('problem 6005 (ENTRY_EXISTS)') >= 0) {
-          // user already in group - just continue
-        } else if (e.message.indexOf('problem 2001 (NO_OBJECT)') >= 0) {
-          // VPN_USER_GROUP not exist
-          // log to teams
-          teamsLogger.log(`failed to add LDAP user ${user.username} (${user.id}) to LDAP group ${VPN_USER_GROUP}):`, e.message)
-          teamsLogger.log(`<@all> Please create this LDAP user group in my datacenter: \`${VPN_USER_GROUP}\``)
-        } else {
-          // any other error - just log to teams
-          teamsLogger.log(`failed to add LDAP user ${user.username} (${user.id}) to LDAP group ${VPN_USER_GROUP}):`, e.message)
-        }
-        // continue
-      }
+      // continue
     }
 
     // create ldap user for non-SSO supervisor agent Rick Barrows
