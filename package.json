@@ -1,7 +1,7 @@
 {
   "name": "dcloud-pcce-12-5-toolbox-api",
   "description": "Cisco dCloud PCCE 12.5 instant demo toolbox REST API",
-  "version": "2020.10.22-1",
+  "version": "2020.10.22-2",
   "private": true,
   "scripts": {
     "start": "NODE_EXTRA_CA_CERTS=extra-CAs.pem node src/index",

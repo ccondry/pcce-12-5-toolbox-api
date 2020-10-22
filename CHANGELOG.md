@@ -4,6 +4,12 @@ Versions are semever-compatible dates in YYYY.MM.DD-X format,
 where X is the revision number
 
 
+# 2020.10.22-2
+
+### Features
+* **Outbound Campaigns:** Add routes to manage outbound campaigns
+
+
 # 2020.10.22-1
 
 ### Features
