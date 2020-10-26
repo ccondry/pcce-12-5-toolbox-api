@@ -29,7 +29,9 @@ router.get('/:id/record', async function (req, res, next) {
   try {
     existing = await campaign.get(req.params.id)
   } catch (e) {
-    return res.status(500).send(`Could not validate your ownership of campaign ${req.params.id}`)
+    console.log('failed to get campaign records for', req.user.username, ':', e)
+    const message = `Could not validate your ownership of campaign ${req.params.id}`
+    return res.status(500).send({message})
   }
   try {
     // console.log(JSON.stringify(existing, null, 2))
