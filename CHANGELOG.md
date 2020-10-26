@@ -4,6 +4,12 @@ Versions are semever-compatible dates in YYYY.MM.DD-X format,
 where X is the revision number
 
 
+# 2020.10.26
+
+### Features
+* **Outbound Campaigns:** fix error message formatting when list campaigns fails
+
+
 # 2020.10.22-3
 
 ### Features
