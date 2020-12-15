@@ -4,6 +4,12 @@ Versions are semever-compatible dates in YYYY.MM.DD-X format,
 where X is the revision number
 
 
+# 2020.11.15
+
+### Bug Fixes
+* **Demo Website:** fix verticals list not showing user's verticals
+
+
 # 2020.10.26
 
 ### Features
