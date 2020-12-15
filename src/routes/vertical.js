@@ -1,13 +1,13 @@
 const express = require('express')
 const router = express.Router()
-const model = require('../models/brand')
+const model = require('../models/vertical')
 
 // get brand list
 router.get('/', async function (req, res, next) {
   try {
     console.log('request to list brands...')
-    // get verticals
-    const response = await model.list()
+    // get verticals for this user
+    const response = await model.list(req.user.username)
     console.log('successfully listed brands')
     // return to client
     return res.status(200).send(response)

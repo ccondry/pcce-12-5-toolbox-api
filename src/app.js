@@ -156,10 +156,8 @@ app.use(urlBase + '/provision', require('./routes/provision'))
 // app.use(urlBase + '/demo-selectors', require('./routes/demo-selectors'))
 // get and set user's cumulus demo config
 app.use(urlBase + '/cumulus', require('./routes/cumulus'))
-// get and list brands
-app.use(urlBase + '/brand', require('./routes/brand'))
-// alias for brands
-app.use(urlBase + '/vertical', require('./routes/brand'))
+// get and list verticals
+app.use(urlBase + '/vertical', require('./routes/vertical'))
 // finesse layout
 app.use(urlBase + '/finesse', require('./routes/finesse'))
 // outbound campaigns
