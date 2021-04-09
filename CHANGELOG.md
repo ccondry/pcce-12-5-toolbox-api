@@ -4,6 +4,13 @@ Versions are semever-compatible dates in YYYY.MM.DD-X format,
 where X is the revision number
 
 
+# 2021.4.9
+
+### Features
+* **Provision:** Allow admins using switch-user to provision a user from start
+to finish, the same as the user would normally be able to do.
+
+
 # 2020.11.15
 
 ### Bug Fixes
