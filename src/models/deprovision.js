@@ -134,7 +134,9 @@ async function departmentAdmin (userId) {
   
   // const ids = existing
   const existing = list
-  .filter(item => item.name.slice(-4) === userId)
+  .filter(item => {
+    return typeof item.name === 'string' && item.name.slice(-4) === userId
+  })
   
   const ids = existing.map(team => team.refURL.split('/').pop())
   if (ids.length) {
