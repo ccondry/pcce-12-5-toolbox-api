@@ -5,3 +5,4 @@ rsa-public.pem
 .env
 yarn.lock
 package-lock.json
+.DS_Store
