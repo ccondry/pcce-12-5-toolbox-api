@@ -4,6 +4,13 @@ Versions are semever-compatible dates in YYYY.MM.DD-X format,
 where X is the revision number
 
 
+# 2021.4.12
+
+### Bug Fixes
+* **Reprovision:** Update user VPN password when they reprovision.
+* **Provision:** Retry CCE provision tasks on either 401 or 503 errors.
+
+
 # 2021.4.9
 
 ### Features
