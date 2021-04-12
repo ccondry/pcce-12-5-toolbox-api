@@ -467,6 +467,14 @@ async function createLdapUser (body) {
     // search for the user first
     const user = await ldap.getUser(body.username)
     // console.log('LDAP user', body.username, 'already exists.')
+    // set password on the existing user
+    await ldap.resetPassword({
+      adminDn: process.env.LDAP_ADMIN_DN,
+      adminPassword: process.env.LDAP_ADMIN_PASSWORD,
+      newPassword: body.password,
+      username: body.username
+    })
+    // return the existing user
     return user
   } catch (e) {
     // not found - create it
