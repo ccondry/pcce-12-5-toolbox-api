@@ -4,6 +4,12 @@ Versions are semever-compatible dates in YYYY.MM.DD-X format,
 where X is the revision number
 
 
+# 2021.4.12-1
+
+### Features
+* **Reset VPN Password:** Add route to reset VPN password.
+
+
 # 2021.4.12
 
 ### Bug Fixes
