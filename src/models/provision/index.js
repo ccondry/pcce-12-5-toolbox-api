@@ -149,7 +149,7 @@ async function retryCce (operation, type, data1, data2) {
       return items
     } catch (e) {
       lastError = e
-      if (e.response.status === 401) {
+      if ([401, 503].includes(e.response.status)) {
         count++
         continue
       } else {
