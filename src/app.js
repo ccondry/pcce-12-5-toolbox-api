@@ -162,6 +162,8 @@ app.use(urlBase + '/vertical', require('./routes/vertical'))
 app.use(urlBase + '/finesse', require('./routes/finesse'))
 // outbound campaigns
 app.use(urlBase + '/campaign', require('./routes/campaign'))
+// reset VPN password
+app.use(urlBase + '/password', require('./routes/password'))
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
