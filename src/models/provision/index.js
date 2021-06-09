@@ -488,12 +488,7 @@ async function createLdapUser (body) {
   }
 }
 
-async function createLdapCceAdminUser (user, password) {
-  // trim username to 20 characters for sAMAccountName limitation
-  let username
-  if (user.username.length > 20) {
-    username = user.username.slice(0, 20)
-  }
+async function createLdapCceAdminUser (user, username, password) {
   // construct body for request
   const body = {
     firstName: user.firstName,

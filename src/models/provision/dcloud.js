@@ -39,13 +39,19 @@ module.exports = async function (user, password, agentPassword = DEFAULT_AGENT_P
     throw Error(message)
   }
 
+  // trim username to 20 characters for sAMAccountName limitation
+  let username = user.username
+  if (user.username.length > 20) {
+    username = user.username.slice(0, 20)
+  }
+
   try {
     // create ldap user for CCE department admin, if password supplied.
     // password should be null when admin user using switch-user to
     // reprovision a user
     if (password) {
       try {
-        vpnUser = await provision.createLdapCceAdminUser(user, password)
+        vpnUser = await provision.createLdapCceAdminUser(user, username, password)
       } catch (e) {
         throw e
       }
@@ -61,11 +67,11 @@ module.exports = async function (user, password, agentPassword = DEFAULT_AGENT_P
         } else if (e.message.indexOf('problem 2001 (NO_OBJECT)') >= 0) {
           // VPN_USER_GROUP not exist
           // log to teams
-          teamsLogger.log(`failed to add LDAP user ${user.username} (${user.id}) to LDAP group ${VPN_USER_GROUP}):`, e.message)
+          teamsLogger.log(`failed to add LDAP user ${username} (${user.id}) to LDAP group ${VPN_USER_GROUP}):`, e.message)
           teamsLogger.log(`<@all> Please create this LDAP user group in my datacenter: \`${VPN_USER_GROUP}\``)
         } else {
           // any other error - just log to teams
-          teamsLogger.log(`failed to add LDAP user ${user.username} (${user.id}) to LDAP group ${VPN_USER_GROUP}):`, e.message)
+          teamsLogger.log(`failed to add LDAP user ${username} (${user.id}) to LDAP group ${VPN_USER_GROUP}):`, e.message)
         }
         // continue
       }
@@ -165,7 +171,7 @@ module.exports = async function (user, password, agentPassword = DEFAULT_AGENT_P
     // Department Admin
     await provision.createOrGetDepartmentAdmin({
       departmentId,
-      username: user.username,
+      username,
       roleId
     })
 
@@ -384,7 +390,7 @@ module.exports = async function (user, password, agentPassword = DEFAULT_AGENT_P
       // create/get outbound agent Owen Harvey
       const outboundAgent1Id = await provision.createOrGetAgent({
         departmentId,
-        username: user.username,
+        username,
         userId: user.id,
         booleanAttributeId: ba,
         proficiencyAttributeId: pa,
@@ -410,7 +416,7 @@ module.exports = async function (user, password, agentPassword = DEFAULT_AGENT_P
       // create/get outbound agent Annika Hamilton
       const outboundAgent2Id = await provision.createOrGetAgent({
         departmentId,
-        username: user.username,
+        username: username,
         userId: user.id,
         booleanAttributeId: ba,
         proficiencyAttributeId: pa,
@@ -465,7 +471,7 @@ module.exports = async function (user, password, agentPassword = DEFAULT_AGENT_P
     // create/get CCE agent Sandra Jefferson with SSO
     const agent1Id = await provision.createOrGetAgent({
       departmentId,
-      username: user.username,
+      username: username,
       userId: user.id,
       booleanAttributeId: ba,
       proficiencyAttributeId: pa,
@@ -494,7 +500,7 @@ module.exports = async function (user, password, agentPassword = DEFAULT_AGENT_P
     // create/get CRM agent Josh Peterson
     const crmAgent1Id = await provision.createOrGetAgent({
       departmentId,
-      username: user.username,
+      username: username,
       userId: user.id,
       booleanAttributeId: ba,
       proficiencyAttributeId: pa,
@@ -517,7 +523,7 @@ module.exports = async function (user, password, agentPassword = DEFAULT_AGENT_P
     // create/get CRM agent Trudy Vere-Jones
     const crmAgent2Id = await provision.createOrGetAgent({
       departmentId,
-      username: user.username,
+      username: username,
       userId: user.id,
       booleanAttributeId: ba,
       proficiencyAttributeId: pa,
@@ -540,7 +546,7 @@ module.exports = async function (user, password, agentPassword = DEFAULT_AGENT_P
     // create/get CCE main supervisor Rick Barrows
     const mainSupervisorId = await provision.createOrGetAgent({
       departmentId,
-      username: user.username,
+      username: username,
       userId: user.id,
       booleanAttributeId: ba,
       proficiencyAttributeId: pa,
@@ -567,7 +573,7 @@ module.exports = async function (user, password, agentPassword = DEFAULT_AGENT_P
     // create/get CCE UWF supervisor James Bracksted
     const uwfSupervisorId = await provision.createOrGetAgent({
       departmentId,
-      username: user.username,
+      username: username,
       userId: user.id,
       booleanAttributeId: ba,
       proficiencyAttributeId: uwfPa,
@@ -592,7 +598,7 @@ module.exports = async function (user, password, agentPassword = DEFAULT_AGENT_P
     // create/get CCE UWF agent Helen Liang
     const uwfAgentId = await provision.createOrGetAgent({
       departmentId,
-      username: user.username,
+      username: username,
       userId: user.id,
       booleanAttributeId: ba,
       proficiencyAttributeId: uwfPa,
@@ -724,38 +730,38 @@ module.exports = async function (user, password, agentPassword = DEFAULT_AGENT_P
     // copy main layout config
     try {
       await provision.copyLayoutConfig(cumulusMainTeamId, mainTeamId)
-      console.log('successfully copied Finesse Team Layout XML from team', cumulusMainTeamId, 'to', mainTeamId, 'for', user.username, user.id)
+      console.log('successfully copied Finesse Team Layout XML from team', cumulusMainTeamId, 'to', mainTeamId, 'for', username, user.id)
     } catch (e) {
-      console.warn('failed to copy Finesse Team Layout XML from team', cumulusMainTeamId, 'to', mainTeamId, 'for', user.username, user.id, e.message)
+      console.warn('failed to copy Finesse Team Layout XML from team', cumulusMainTeamId, 'to', mainTeamId, 'for', username, user.id, e.message)
     }
     // copy CRM layout config
     try {
       await provision.copyLayoutConfig(cumulusCrmTeamId, crmTeamId)
-      console.log('successfully copied Finesse Team Layout XML from team', cumulusCrmTeamId, 'to', crmTeamId, 'for', user.username, user.id)
+      console.log('successfully copied Finesse Team Layout XML from team', cumulusCrmTeamId, 'to', crmTeamId, 'for', username, user.id)
     } catch (e) {
-      console.warn('failed to copy Finesse Team Layout XML from team', cumulusCrmTeamId, 'to', crmTeamId, 'for', user.username, user.id, e.message)
+      console.warn('failed to copy Finesse Team Layout XML from team', cumulusCrmTeamId, 'to', crmTeamId, 'for', username, user.id, e.message)
    CumulusUWF }
     // copy UWF layout config
     try {
       await provision.copyLayoutConfig(cumulusUwfTeamId, uwfTeamId)
-      console.log('successfully copied Finesse Team Layout XML from team', cumulusUwfTeamId, 'to', uwfTeamId, 'for', user.username, user.id)
+      console.log('successfully copied Finesse Team Layout XML from team', cumulusUwfTeamId, 'to', uwfTeamId, 'for', username, user.id)
     } catch (e) {
-      console.warn('failed to copy Finesse Team Layout XML from team', cumulusUwfTeamId, 'to', uwfTeamId, 'for', user.username, user.id, e.message)
+      console.warn('failed to copy Finesse Team Layout XML from team', cumulusUwfTeamId, 'to', uwfTeamId, 'for', username, user.id, e.message)
     }
     // copy Outbound layout config
     try {
       await provision.copyLayoutConfig(cumulusOutboundTeamId, outboundTeamId)
-      console.log('successfully copied Finesse Team Layout XML from team', cumulusOutboundTeamId, 'to', outboundTeamId, 'for', user.username, user.id)
+      console.log('successfully copied Finesse Team Layout XML from team', cumulusOutboundTeamId, 'to', outboundTeamId, 'for', username, user.id)
     } catch (e) {
-      console.warn('failed to copy Finesse Team Layout XML from team', cumulusOutboundTeamId, 'to', outboundTeamId, 'for', user.username, user.id, e.message)
+      console.warn('failed to copy Finesse Team Layout XML from team', cumulusOutboundTeamId, 'to', outboundTeamId, 'for', username, user.id, e.message)
     }
 
     // copy Finesse Team WrapUp from template team to our new teams
     try {
       await provision.copyWrapUpConfig(cumulusMainTeamId, mainTeamId)
-      console.log('successfully copied Finesse Wrap-Up Codes from team', cumulusMainTeamId, 'to', mainTeamId, 'for', user.username, user.id)
+      console.log('successfully copied Finesse Wrap-Up Codes from team', cumulusMainTeamId, 'to', mainTeamId, 'for', username, user.id)
     } catch (e) {
-      console.warn('failed to copy Finesse Wrap-Up Codes from team', cumulusMainTeamId, 'to', mainTeamId, 'for', user.username, user.id, e.message)
+      console.warn('failed to copy Finesse Wrap-Up Codes from team', cumulusMainTeamId, 'to', mainTeamId, 'for', username, user.id, e.message)
     }
 
     // create email account on branding in linux
