@@ -489,12 +489,17 @@ async function createLdapUser (body) {
 }
 
 async function createLdapCceAdminUser (user, password) {
+  // trim username to 20 characters for sAMAccountName limitation
+  let username
+  if (user.username.length > 20) {
+    username = user.username.slice(0, 20)
+  }
   // construct body for request
   const body = {
     firstName: user.firstName,
     lastName: user.lastName,
-    username: user.username,
-    commonName: user.username,
+    username,
+    commonName: username,
     domain: process.env.LDAP_DOMAIN,
     physicalDeliveryOfficeName: user.id,
     telephoneNumber: '44' + user.id,
