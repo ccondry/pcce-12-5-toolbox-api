@@ -4,6 +4,13 @@ Versions are semever-compatible dates in YYYY.MM.DD-X format,
 where X is the revision number
 
 
+# 2021.6.9
+
+### Fixes
+* **Provision:** Fix provision errors when VPN username is longer than 20
+characters.
+
+
 # 2021.4.12-1
 
 ### Features
